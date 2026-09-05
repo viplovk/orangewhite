@@ -1,0 +1,367 @@
+@import "tailwindcss";
+
+@theme {
+  --color-swiss-red: #FF3000;
+  --color-swiss-black: #000000;
+  --color-swiss-white: #FFFFFF;
+  --color-swiss-muted: #F2F2F2;
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Global Smooth Transitions & Fluid Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Fluid transition property for theme changes, colors, borders, and shadows */
+body {
+  transition: background-color 300ms cubic-bezier(0.16, 1, 0.3, 1),
+              color 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+header,
+nav,
+section,
+footer,
+div,
+button,
+a,
+input,
+textarea,
+span,
+p,
+h1,
+h2,
+h3,
+h4,
+table,
+td,
+th {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow, opacity, transform;
+  transition-duration: 250ms;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Interactive elements hover & active states */
+button, a {
+  cursor: pointer;
+  user-select: none;
+}
+
+button:active, a:active {
+  transform: scale(0.985);
+}
+
+/* Swiss International Typographic Style Patterns */
+.swiss-grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.swiss-dots {
+  background-image: radial-gradient(rgba(0, 0, 0, 0.12) 1.5px, transparent 1.5px);
+  background-size: 16px 16px;
+}
+
+.swiss-diagonal {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(0, 0, 0, 0.035),
+    rgba(0, 0, 0, 0.035) 1px,
+    transparent 0,
+    transparent 10px
+  );
+}
+
+.swiss-crosshairs {
+  background-image: 
+    radial-gradient(circle at 1px 1px, rgba(255, 48, 0, 0.25) 1px, transparent 0);
+  background-size: 32px 32px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FFFFFF;
+  border-left: 2px solid #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FF3000;
+}
+
+/* Remove default rounded corners ONLY in Swiss International design */
+body.theme-swiss *, 
+body.theme-swiss *::before, 
+body.theme-swiss *::after {
+  border-radius: 0px !important;
+}
+
+/* ==========================================================================
+   THEME 2: CYBER TERMINAL & CLI (Matrix Dark / Phosphor Green & Amber)
+   ========================================================================== */
+body.theme-cyber {
+  background-color: #07090e !important;
+  color: #e2e8f0 !important;
+  font-family: 'JetBrains Mono', ui-monospace, monospace !important;
+}
+
+body.theme-cyber * {
+  font-family: 'JetBrains Mono', ui-monospace, monospace !important;
+}
+
+body.theme-cyber .border-black,
+body.theme-cyber .border-r-4,
+body.theme-cyber .border-b-4,
+body.theme-cyber .border-t-4,
+body.theme-cyber .border-l-4,
+body.theme-cyber .divide-black > * + * {
+  border-color: #1e293b !important;
+}
+
+body.theme-cyber .bg-white {
+  background-color: #0a0e18 !important;
+  color: #e2e8f0 !important;
+}
+
+body.theme-cyber .bg-\[\#F2F2F2\] {
+  background-color: #0e1422 !important;
+  color: #94a3b8 !important;
+}
+
+body.theme-cyber .bg-black {
+  background-color: #05070a !important;
+  color: #00ff66 !important;
+  border-color: #1e293b !important;
+}
+
+body.theme-cyber .text-black {
+  color: #e2e8f0 !important;
+}
+
+body.theme-cyber .text-neutral-600,
+body.theme-cyber .text-neutral-500,
+body.theme-cyber .text-neutral-400 {
+  color: #94a3b8 !important;
+}
+
+body.theme-cyber .text-\[\#FF3000\] {
+  color: #00ff66 !important;
+}
+
+body.theme-cyber .bg-\[\#FF3000\] {
+  background-color: #00ff66 !important;
+  color: #05070a !important;
+}
+
+body.theme-cyber .hover\:bg-\[\#FF3000\]:hover {
+  background-color: #00ff66 !important;
+  color: #05070a !important;
+}
+
+body.theme-cyber .hover\:text-white:hover {
+  color: #00ff66 !important;
+}
+
+body.theme-cyber ::selection {
+  background: #00ff66 !important;
+  color: #000000 !important;
+}
+
+/* ==========================================================================
+   THEME 3: LINEAR OBSIDIAN (Modern Developer Dark Mode / Bento / Cyan Glow)
+   ========================================================================== */
+body.theme-modern-dark {
+  background-color: #09090b !important;
+  color: #fafafa !important;
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
+}
+
+body.theme-modern-dark h1,
+body.theme-modern-dark h2,
+body.theme-modern-dark h3,
+body.theme-modern-dark h4 {
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+body.theme-modern-dark .border-black,
+body.theme-modern-dark .border-r-4,
+body.theme-modern-dark .border-b-4,
+body.theme-modern-dark .border-t-4,
+body.theme-modern-dark .border-l-4,
+body.theme-modern-dark .divide-black > * + * {
+  border-color: #27272a !important;
+}
+
+body.theme-modern-dark .bg-white {
+  background-color: #121215 !important;
+  color: #fafafa !important;
+}
+
+body.theme-modern-dark .bg-\[\#F2F2F2\] {
+  background-color: #18181b !important;
+  color: #a1a1aa !important;
+}
+
+body.theme-modern-dark .bg-black {
+  background-color: #000000 !important;
+  color: #fafafa !important;
+  border-color: #27272a !important;
+}
+
+body.theme-modern-dark .text-black {
+  color: #fafafa !important;
+}
+
+body.theme-modern-dark .text-neutral-600,
+body.theme-modern-dark .text-neutral-500,
+body.theme-modern-dark .text-neutral-400 {
+  color: #a1a1aa !important;
+}
+
+body.theme-modern-dark .text-\[\#FF3000\] {
+  color: #38bdf8 !important;
+}
+
+body.theme-modern-dark .bg-\[\#FF3000\] {
+  background-color: #38bdf8 !important;
+  color: #09090b !important;
+}
+
+body.theme-modern-dark .hover\:bg-\[\#FF3000\]:hover {
+  background-color: #38bdf8 !important;
+  color: #09090b !important;
+}
+
+body.theme-modern-dark ::selection {
+  background: #38bdf8 !important;
+  color: #09090b !important;
+}
+
+/* ==========================================================================
+   THEME 4: ARCHIVAL EDITORIAL (Warm Ivory / Classical Serif / Terracotta)
+   ========================================================================== */
+body.theme-editorial {
+  background-color: #faf7f2 !important;
+  color: #1c1917 !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+body.theme-editorial h1,
+body.theme-editorial h2,
+body.theme-editorial h3,
+body.theme-editorial #brand-logo span:first-child,
+body.theme-editorial .font-black {
+  font-family: 'Playfair Display', Georgia, serif !important;
+}
+
+body.theme-editorial .border-black,
+body.theme-editorial .border-r-4,
+body.theme-editorial .border-b-4,
+body.theme-editorial .border-t-4,
+body.theme-editorial .border-l-4,
+body.theme-editorial .divide-black > * + * {
+  border-color: #d6d3d1 !important;
+}
+
+body.theme-editorial .bg-white {
+  background-color: #ffffff !important;
+  color: #1c1917 !important;
+}
+
+body.theme-editorial .bg-\[\#F2F2F2\] {
+  background-color: #f3ede2 !important;
+  color: #57534e !important;
+}
+
+body.theme-editorial .bg-black {
+  background-color: #1c1917 !important;
+  color: #faf7f2 !important;
+}
+
+body.theme-editorial .text-black {
+  color: #1c1917 !important;
+}
+
+body.theme-editorial .text-neutral-600,
+body.theme-editorial .text-neutral-500,
+body.theme-editorial .text-neutral-400 {
+  color: #57534e !important;
+}
+
+body.theme-editorial .text-\[\#FF3000\] {
+  color: #c2410c !important;
+}
+
+body.theme-editorial .bg-\[\#FF3000\] {
+  background-color: #c2410c !important;
+  color: #ffffff !important;
+}
+
+body.theme-editorial .hover\:bg-\[\#FF3000\]:hover {
+  background-color: #c2410c !important;
+  color: #ffffff !important;
+}
+
+body.theme-editorial ::selection {
+  background: #c2410c !important;
+  color: #ffffff !important;
+}
+
+/* ==========================================================================
+   THEME 5: NEO-BRUTALIST POP (Solar Yellow / Electric Cobalt / Offset Shadows)
+   ========================================================================== */
+body.theme-neo-pop {
+  background-color: #fffdf0 !important;
+  color: #0f172a !important;
+}
+
+body.theme-neo-pop .bg-white {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+body.theme-neo-pop .bg-\[\#F2F2F2\] {
+  background-color: #fef08a !important;
+  color: #0f172a !important;
+}
+
+body.theme-neo-pop .text-\[\#FF3000\] {
+  color: #2563EB !important;
+}
+
+body.theme-neo-pop .bg-\[\#FF3000\] {
+  background-color: #2563EB !important;
+  color: #ffffff !important;
+}
+
+body.theme-neo-pop .hover\:bg-\[\#FF3000\]:hover {
+  background-color: #2563EB !important;
+  color: #ffffff !important;
+}
+
+body.theme-neo-pop button {
+  box-shadow: 2px 2px 0px #0f172a;
+}
+
+body.theme-neo-pop button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px #0f172a;
+}
+
+body.theme-neo-pop ::selection {
+  background: #fef08a !important;
+  color: #0f172a !important;
+}
+
+

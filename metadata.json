@@ -1,0 +1,6 @@
+{
+  "name": "Viplov — Portfolio",
+  "description": "Portfolio of Viplov, Computer Science & Engineering undergraduate at IEC-CET. Built with the International Typographic Style (Swiss Style).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

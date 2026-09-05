@@ -1,20 +1,93 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Viplov — Portfolio</title>
     <meta name="description" content="Portfolio of Viplov, Computer Science & Engineering undergraduate at IEC-CET. Built with the International Typographic Style (Swiss Style)." />
+    <meta name="author" content="Viplov" />
+    <meta name="keywords" content="Viplov, Portfolio, Computer Science, Engineering, IEC-CET, Web Developer, React, TypeScript, C++, Python, AKTU, Greater Noida, Delhi NCR" />
+    <meta name="theme-color" content="#000000" />
+    
+    <!-- Open Graph / Social Sharing -->
     <meta property="og:title" content="Viplov — Portfolio" />
     <meta property="og:description" content="Portfolio of Viplov, Computer Science & Engineering undergraduate at IEC-CET. Built with the International Typographic Style (Swiss Style)." />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Viplov — Portfolio" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Viplov — Portfolio" />
+    <meta name="twitter:description" content="Portfolio of Viplov, Computer Science & Engineering undergraduate at IEC-CET. Built with the International Typographic Style (Swiss Style)." />
+
+    <!-- Typography Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Structured Data (JSON-LD) for Search Engines -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Viplov",
+      "jobTitle": "Undergraduate Software Engineer & Computer Science Student",
+      "affiliation": {
+        "@type": "CollegeOrUniversity",
+        "name": "IEC College of Engineering & Technology",
+        "location": "Greater Noida, Uttar Pradesh, India"
+      },
+      "alumniOf": {
+        "@type": "EducationalOrganization",
+        "name": "Balkishan Public School",
+        "location": "Delhi, India"
+      },
+      "sameAs": [
+        "https://github.com/viplovk"
+      ],
+      "knowsAbout": [
+        "Computer Science",
+        "Full-Stack Web Development",
+        "React",
+        "TypeScript",
+        "C++",
+        "Python",
+        "Algorithm Design",
+        "Swiss Graphic Design"
+      ]
+    }
+    </script>
   </head>
   <body class="bg-white text-black antialiased selection:bg-[#FF3000] selection:text-white">
-    <div id="root"></div>
+    <!-- Primary Application Mount Point -->
+    <div id="root">
+      <!-- Fallback / Pre-render Semantic Content for crawlers and non-JS clients -->
+      <noscript>
+        <div style="font-family: monospace; max-width: 800px; margin: 40px auto; padding: 20px; border: 4px solid #000; background: #fff;">
+          <h1 style="font-size: 2rem; text-transform: uppercase; margin-bottom: 0.5rem;">VIPLOV // PORTFOLIO</h1>
+          <p style="font-size: 1rem; color: #ff3000; font-weight: bold; text-transform: uppercase;">
+            B.Tech Computer Science &amp; Engineering Undergraduate
+          </p>
+          <p>IEC College of Engineering &amp; Technology — Greater Noida, Uttar Pradesh, India</p>
+          <hr style="border: 2px solid #000; margin: 20px 0;" />
+          <h2>KEY REPOSITORIES &amp; PROJECTS</h2>
+          <ul>
+            <li><strong>viplovk/repos</strong> — Developer Portfolio &amp; Swiss System Showcase</li>
+            <li><strong>viplovk/IECCET</strong> — IEC-CET Academic Portal &amp; Department Syllabus Archives</li>
+            <li><strong>viplovk/calc</strong> — Fast Decimal &amp; Computational Matrix Engine</li>
+            <li><strong>viplovk/beyond</strong> — Beyond Web Architecture &amp; Experiments</li>
+          </ul>
+          <hr style="border: 2px solid #000; margin: 20px 0;" />
+          <h2>CONTACT &amp; PROFILES</h2>
+          <p>Email: <a href="mailto:viplov7@icloud.com">viplov7@icloud.com</a></p>
+          <p>GitHub: <a href="https://github.com/viplovk">https://github.com/viplovk</a></p>
+          <p><em>Please enable JavaScript to experience the interactive 5-design studio showroom, live compilers, and interactive widgets.</em></p>
+        </div>
+      </noscript>
+    </div>
+
+    <!-- Main Module Script Entry -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

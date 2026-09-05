@@ -81,18 +81,18 @@ export const InteractiveIECCET: React.FC = () => {
           <div className="p-4 bg-[#F2F2F2] border-4 border-black mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
               <span className="text-[10px] font-bold text-[#FF3000] uppercase tracking-widest block">
-                COMPUTED FIRST SEMESTER RATING
+                PROJECTED SEMESTER EVALUATION
               </span>
               <span className="text-3xl sm:text-4xl font-black text-black">
                 {calculatedSGPA} <span className="text-base font-bold text-neutral-500">/ 10.00 SGPA</span>
               </span>
               <p className="text-[11px] text-neutral-600 font-sans mt-0.5">
-                Calculated across {totalCredits} credit weight units. Matches Viplov&apos;s 1st Sem official record (7.95).
+                Calculated across {totalCredits} credit weight units according to standard AKTU engineering grading scheme.
               </p>
             </div>
             <button
               onClick={() => {
-                // reset to official 7.95 configuration
+                // reset to default standard configuration
                 setCourses([
                   { code: 'BCS101', title: 'PROGRAMMING FOR PROBLEM SOLVING', credits: 4, gradePoint: 9 },
                   { code: 'BAS103', title: 'ENGINEERING MATHEMATICS - I', credits: 4, gradePoint: 8 },
@@ -105,7 +105,7 @@ export const InteractiveIECCET: React.FC = () => {
               }}
               className="px-4 py-2 bg-black text-white hover:bg-[#FF3000] uppercase font-bold text-xs"
             >
-              RESTORE OFFICIAL 7.95 BENCHMARK
+              RESET TO STANDARD CURRICULUM
             </button>
           </div>
 

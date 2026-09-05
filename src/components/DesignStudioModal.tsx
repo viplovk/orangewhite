@@ -197,7 +197,7 @@ export const DesignStudioModal: React.FC<DesignStudioModalProps> = ({
                               color: theme.id === 'cyber' ? '#000000' : '#FFFFFF',
                             }}
                           >
-                            7.95 SGPA
+                            B.TECH CSE
                           </span>
                         </div>
                         <p className="text-[11px] leading-snug mb-2" style={{ color: theme.colors.textMuted }}>
@@ -394,7 +394,7 @@ export const DesignStudioModal: React.FC<DesignStudioModalProps> = ({
                   PORTFOLIO IDENTITY PRESERVATION
                 </h4>
                 <p className="text-xs font-mono text-neutral-600 mt-0.5 max-w-2xl">
-                  Every design option seamlessly renders all your academic milestones (IEC-CET, 7.95 SGPA, BPS Delhi), live repositories (<span className="text-black font-bold">repos</span>, <span className="text-black font-bold">IECCET</span>, <span className="text-black font-bold">calc</span>, <span className="text-black font-bold">beyond</span>), and contact channels.
+                  Every design option seamlessly renders all your academic milestones (IEC-CET, B.Tech CSE, BPS Delhi), live repositories (<span className="text-black font-bold">repos</span>, <span className="text-black font-bold">IECCET</span>, <span className="text-black font-bold">calc</span>, <span className="text-black font-bold">beyond</span>), and contact channels.
                 </p>
               </div>
             </div>

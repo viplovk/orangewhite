@@ -24,7 +24,7 @@ export const AcademicsSection: React.FC = () => {
         <div className="flex items-center gap-3">
           <div className="px-4 py-2 bg-black text-white font-mono text-xs font-bold tracking-wider uppercase border-2 border-black flex items-center gap-2">
             <span className="w-2 h-2 bg-[#FF3000]" />
-            <span>PRIMARY INDEX: 7.95 SGPA</span>
+            <span>DEGREE TRACK: B.TECH CSE (2024–2028)</span>
           </div>
         </div>
       </div>
@@ -51,17 +51,17 @@ export const AcademicsSection: React.FC = () => {
             <div className="p-6 bg-black text-white border-4 border-black mb-8 relative overflow-hidden group">
               <div className="flex items-start justify-between">
                 <span className="text-xs font-mono font-bold tracking-widest text-[#FF3000] uppercase">
-                  FIRST SEMESTER SGPA
+                  CORE SPECIALIZATION
                 </span>
                 <span className="text-[10px] font-mono text-neutral-400 uppercase">
-                  VERIFIED RECORD
+                  ENROLLED 2024–2028
                 </span>
               </div>
-              <div className="text-6xl sm:text-7xl font-black tracking-tighter text-white mt-2 mb-1">
-                7.95
+              <div className="text-3xl sm:text-4xl font-black tracking-tight text-white mt-3 mb-2 uppercase">
+                COMPUTER SCIENCE
               </div>
               <p className="text-xs font-sans text-neutral-300">
-                Strong computational foundations across algorithm implementation, discrete mathematics, and system programming.
+                Rigorous foundations across data structures, algorithm analysis, low-level systems programming in C/C++, web platforms, and discrete mathematics.
               </p>
             </div>
 

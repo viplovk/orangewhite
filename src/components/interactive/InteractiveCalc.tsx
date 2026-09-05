@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { RotateCcw, Delete, Equal } from 'lucide-react';
 
 export const InteractiveCalc: React.FC = () => {
-  const [expression, setExpression] = useState('19 * 4 + 7.95');
-  const [result, setResult] = useState('83.95');
+  const [expression, setExpression] = useState('1024 * 8');
+  const [result, setResult] = useState('8192');
   const [history, setHistory] = useState<string[]>([
-    '7.95 * 10 = 79.5',
-    '19 * 4 + 7.95 = 83.95',
+    '2024 + 4 = 2028',
+    '1024 * 8 = 8192',
   ]);
 
   const handleInput = (val: string) => {

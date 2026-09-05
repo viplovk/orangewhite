@@ -153,10 +153,10 @@ export const Hero: React.FC<HeroProps> = ({ onExploreProjects, onContactClick })
               {/* Black geometric rectangle */}
               <div className="absolute bottom-4 left-4 w-32 h-20 sm:w-40 sm:h-24 bg-black text-white p-3 flex flex-col justify-between transition-transform duration-300 hover:scale-105">
                 <span className="text-[10px] font-mono font-bold tracking-widest text-[#FF3000]">
-                  SGPA METRIC
+                  SPECIALIZATION
                 </span>
-                <span className="text-2xl sm:text-3xl font-black tracking-tighter">
-                  7.95
+                <span className="text-xl sm:text-2xl font-black tracking-tight uppercase leading-tight">
+                  B.TECH CSE
                 </span>
               </div>
 

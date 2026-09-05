@@ -104,8 +104,8 @@ export const ProfileSpecs: React.FC = () => {
                     <span className="font-bold text-black uppercase">IEC-CET</span>
                   </div>
                   <div className="p-3 bg-black text-white border-2 border-black flex items-center justify-between transition-colors duration-150 hover:border-[#FF3000]">
-                    <span className="text-neutral-400 font-bold uppercase">SEM 1 SCORE</span>
-                    <span className="font-bold text-[#FF3000] uppercase">7.95 SGPA</span>
+                    <span className="text-neutral-400 font-bold uppercase">DEGREE TRACK</span>
+                    <span className="font-bold text-[#FF3000] uppercase">B.TECH CSE (2028)</span>
                   </div>
                 </div>
               </div>

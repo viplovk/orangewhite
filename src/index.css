@@ -100,11 +100,35 @@ button:active, a:active {
   background: #FF3000;
 }
 
-/* Remove default rounded corners ONLY in Swiss International design */
-body.theme-swiss *, 
+/* Remove default rounded corners ONLY in Swiss International design (exempt custom cursor elements) */
+body.theme-swiss *:not(#custom-cursor-root, #custom-cursor-root *), 
 body.theme-swiss *::before, 
 body.theme-swiss *::after {
   border-radius: 0px !important;
+}
+
+/* ==========================================================================
+   INVERTED CUSTOM CURSOR STYLING & DESKTOP CURSOR HIDING
+   ========================================================================== */
+@media (hover: hover) and (pointer: fine) {
+  body.custom-cursor-active,
+  body.custom-cursor-active a,
+  body.custom-cursor-active button,
+  body.custom-cursor-active [role="button"],
+  body.custom-cursor-active .cursor-pointer {
+    cursor: none !important;
+  }
+}
+
+/* Ensure cursor components never inherit slow CSS transform animations */
+#custom-cursor-root,
+#custom-cursor-root * {
+  transition-property: opacity, background-color, border-color, width, height, border-radius !important;
+}
+
+#cursor-dot-center,
+#cursor-lens-follower {
+  transition: none !important;
 }
 
 /* ==========================================================================

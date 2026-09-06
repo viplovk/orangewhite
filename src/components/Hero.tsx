@@ -114,6 +114,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreProjects, onContactClick })
               <button
                 id="hero-btn-explore"
                 onClick={onExploreProjects}
+                data-cursor-text="EXPLORE"
                 className="flex-1 h-14 sm:h-16 px-8 bg-black text-white text-xs sm:text-sm font-black tracking-widest uppercase hover:bg-[#FF3000] hover:text-white transition-all duration-200 flex items-center justify-between cursor-pointer group shadow-sm hover:shadow-md"
               >
                 <span>REPOSITORIES // 04</span>
@@ -122,6 +123,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreProjects, onContactClick })
               <button
                 id="hero-btn-contact"
                 onClick={onContactClick}
+                data-cursor-text="CONNECT"
                 className="flex-1 h-14 sm:h-16 px-8 bg-white border-4 border-black text-black text-xs sm:text-sm font-black tracking-widest uppercase hover:bg-[#FF3000] hover:text-white hover:border-[#FF3000] transition-all duration-200 flex items-center justify-between cursor-pointer group shadow-sm hover:shadow-md"
               >
                 <span>DISPATCH TRANSMISSION</span>

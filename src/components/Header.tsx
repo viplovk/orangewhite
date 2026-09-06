@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { ArrowUpRight, Menu, X, Sparkles, Palette } from 'lucide-react';
+import { ArrowUpRight, Menu, X, Sparkles, Palette, Crosshair } from 'lucide-react';
 import { DESIGN_THEMES } from '../data/designThemes';
+import { CursorMode } from './CustomCursor';
 
 interface HeaderProps {
   activeSection: string;
   onNavigate: (sectionId: string) => void;
   activeThemeId?: string;
   onOpenDesignStudio?: () => void;
+  cursorEnabled?: boolean;
+  cursorMode?: CursorMode;
+  onCycleCursorMode?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({ 
@@ -14,6 +18,9 @@ export const Header: React.FC<HeaderProps> = ({
   onNavigate,
   activeThemeId = 'swiss',
   onOpenDesignStudio,
+  cursorEnabled = true,
+  cursorMode = 'reticle',
+  onCycleCursorMode,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const currentTheme = DESIGN_THEMES.find((t) => t.id === activeThemeId) || DESIGN_THEMES[0];
@@ -93,6 +100,17 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="hidden md:inline">DESIGN:</span>
               <span>{currentTheme.name.split(' ')[0]}</span>
               <span className="text-[10px] text-[#FF3000] font-black group-hover:text-white">▾</span>
+            </button>
+          )}
+
+          {onCycleCursorMode && (
+            <button
+              onClick={onCycleCursorMode}
+              className="hidden xl:flex items-center gap-1.5 px-3 border-r-4 border-black bg-white hover:bg-black hover:text-white text-[10px] font-mono font-bold uppercase transition-colors cursor-pointer"
+              title="Cycle Inverted Cursor Style (Reticle / Disc / Precision). Hotkey: Press 'C'"
+            >
+              <Crosshair className="w-3 h-3 text-[#FF3000]" />
+              <span>CURSOR: {cursorMode.toUpperCase()}</span>
             </button>
           )}
 

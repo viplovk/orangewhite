@@ -8,6 +8,7 @@ import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { DesignStudioModal } from './components/DesignStudioModal';
 import { ThemeSwitcherBar } from './components/ThemeSwitcherBar';
+import { CustomCursor, CursorMode } from './components/CustomCursor';
 import { DesignTheme } from './data/designThemes';
 
 export default function App() {
@@ -24,6 +25,67 @@ export default function App() {
     return 'swiss';
   });
   const [isDesignStudioOpen, setIsDesignStudioOpen] = useState(false);
+
+  // Inverted Custom Cursor State
+  const [cursorEnabled, setCursorEnabled] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('viplov_cursor_enabled');
+      return saved !== null ? saved === 'true' : true;
+    } catch {
+      return true;
+    }
+  });
+
+  const [cursorMode, setCursorMode] = useState<CursorMode>(() => {
+    try {
+      const saved = localStorage.getItem('viplov_cursor_mode') as CursorMode;
+      return saved && ['reticle', 'disc', 'precision'].includes(saved) ? saved : 'reticle';
+    } catch {
+      return 'reticle';
+    }
+  });
+
+  const handleToggleCursor = () => {
+    setCursorEnabled((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('viplov_cursor_enabled', String(next));
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+  };
+
+  const handleCycleCursorMode = () => {
+    setCursorMode((prev) => {
+      const modes: CursorMode[] = ['reticle', 'disc', 'precision'];
+      const next = modes[(modes.indexOf(prev) + 1) % modes.length];
+      try {
+        localStorage.setItem('viplov_cursor_mode', next);
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+  };
+
+  // Keyboard shortcut 'C' to cycle cursor modes or toggle
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        ['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement)?.tagName) ||
+        (e.target as HTMLElement)?.isContentEditable
+      ) {
+        return;
+      }
+      if (e.key === 'c' || e.key === 'C') {
+        handleCycleCursorMode();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // Sync theme to document body class and storage
   useEffect(() => {
@@ -90,6 +152,9 @@ export default function App() {
           onNavigate={scrollToSection}
           activeThemeId={activeThemeId}
           onOpenDesignStudio={() => setIsDesignStudioOpen(true)}
+          cursorEnabled={cursorEnabled}
+          cursorMode={cursorMode}
+          onCycleCursorMode={handleCycleCursorMode}
         />
 
         {/* Main Content Sections */}
@@ -113,6 +178,18 @@ export default function App() {
         activeThemeId={activeThemeId}
         onSelectTheme={handleSelectTheme}
         onOpenDesignStudio={() => setIsDesignStudioOpen(true)}
+        cursorEnabled={cursorEnabled}
+        cursorMode={cursorMode}
+        onToggleCursor={handleToggleCursor}
+        onCycleCursorMode={handleCycleCursorMode}
+      />
+
+      {/* Unique Inverted Optical Custom Cursor */}
+      <CustomCursor
+        enabled={cursorEnabled}
+        mode={cursorMode}
+        onToggleEnabled={handleToggleCursor}
+        onCycleMode={handleCycleCursorMode}
       />
 
       {/* Comprehensive Design Studio Showroom Modal */}

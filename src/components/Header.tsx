@@ -158,7 +158,7 @@ export const Header: React.FC<HeaderProps> = ({
           )}
           <div className="p-4 bg-[#F2F2F2] flex items-center justify-between text-xs font-mono font-bold">
             <span className="text-black uppercase">DELHI // GREATER NOIDA</span>
-            <span className="text-[#FF3000]">B.TECH CSE</span>
+            <span className="text-[#FF3000]">B.TECH CSE (2ND YR)</span>
           </div>
         </div>
       )}

@@ -105,7 +105,7 @@ export const ProfileSpecs: React.FC = () => {
                   </div>
                   <div className="p-3 bg-black text-white border-2 border-black flex items-center justify-between transition-colors duration-150 hover:border-[#FF3000]">
                     <span className="text-neutral-400 font-bold uppercase">DEGREE TRACK</span>
-                    <span className="font-bold text-[#FF3000] uppercase">B.TECH CSE (2028)</span>
+                    <span className="font-bold text-[#FF3000] uppercase">B.TECH CSE (2029) // 2ND YR</span>
                   </div>
                 </div>
               </div>

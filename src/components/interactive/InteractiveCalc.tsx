@@ -5,7 +5,7 @@ export const InteractiveCalc: React.FC = () => {
   const [expression, setExpression] = useState('1024 * 8');
   const [result, setResult] = useState('8192');
   const [history, setHistory] = useState<string[]>([
-    '2024 + 4 = 2028',
+    '2025 + 4 = 2029',
     '1024 * 8 = 8192',
   ]);
 

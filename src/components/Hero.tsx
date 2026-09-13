@@ -114,6 +114,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreProjects, onContactClick })
               <button
                 id="hero-btn-explore"
                 onClick={onExploreProjects}
+                data-cursor-text="EXPLORE"
                 className="flex-1 h-14 sm:h-16 px-8 bg-black text-white text-xs sm:text-sm font-black tracking-widest uppercase hover:bg-[#FF3000] hover:text-white transition-all duration-200 flex items-center justify-between cursor-pointer group shadow-sm hover:shadow-md"
               >
                 <span>REPOSITORIES // 04</span>
@@ -122,6 +123,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreProjects, onContactClick })
               <button
                 id="hero-btn-contact"
                 onClick={onContactClick}
+                data-cursor-text="CONNECT"
                 className="flex-1 h-14 sm:h-16 px-8 bg-white border-4 border-black text-black text-xs sm:text-sm font-black tracking-widest uppercase hover:bg-[#FF3000] hover:text-white hover:border-[#FF3000] transition-all duration-200 flex items-center justify-between cursor-pointer group shadow-sm hover:shadow-md"
               >
                 <span>DISPATCH TRANSMISSION</span>
@@ -153,10 +155,10 @@ export const Hero: React.FC<HeroProps> = ({ onExploreProjects, onContactClick })
               {/* Black geometric rectangle */}
               <div className="absolute bottom-4 left-4 w-32 h-20 sm:w-40 sm:h-24 bg-black text-white p-3 flex flex-col justify-between transition-transform duration-300 hover:scale-105">
                 <span className="text-[10px] font-mono font-bold tracking-widest text-[#FF3000]">
-                  SPECIALIZATION
+                  BATCH 2025–2029
                 </span>
                 <span className="text-xl sm:text-2xl font-black tracking-tight uppercase leading-tight">
-                  B.TECH CSE
+                  2ND YR CSE
                 </span>
               </div>
 
@@ -189,7 +191,7 @@ export const Hero: React.FC<HeroProps> = ({ onExploreProjects, onContactClick })
               <span className="text-base sm:text-lg font-black uppercase text-black block leading-tight">
                 IEC-CET
               </span>
-              <span className="text-xs text-neutral-600 font-medium">B.Tech CSE</span>
+              <span className="text-xs text-neutral-600 font-medium">B.Tech CSE // 2nd Year</span>
             </div>
 
             <div className="p-4 sm:p-6 hover:bg-[#F2F2F2] transition-all duration-200">

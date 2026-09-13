@@ -24,7 +24,7 @@ export const AcademicsSection: React.FC = () => {
         <div className="flex items-center gap-3">
           <div className="px-4 py-2 bg-black text-white font-mono text-xs font-bold tracking-wider uppercase border-2 border-black flex items-center gap-2">
             <span className="w-2 h-2 bg-[#FF3000]" />
-            <span>DEGREE TRACK: B.TECH CSE (2024–2028)</span>
+            <span>DEGREE TRACK: B.TECH CSE (2025–2029) // 2ND YEAR</span>
           </div>
         </div>
       </div>
@@ -54,14 +54,14 @@ export const AcademicsSection: React.FC = () => {
                   CORE SPECIALIZATION
                 </span>
                 <span className="text-[10px] font-mono text-neutral-400 uppercase">
-                  ENROLLED 2024–2028
+                  BATCH 2025–2029 // 2ND YEAR
                 </span>
               </div>
               <div className="text-3xl sm:text-4xl font-black tracking-tight text-white mt-3 mb-2 uppercase">
                 COMPUTER SCIENCE
               </div>
               <p className="text-xs font-sans text-neutral-300">
-                Rigorous foundations across data structures, algorithm analysis, low-level systems programming in C/C++, web platforms, and discrete mathematics.
+                Currently in 2nd year of B.Tech CSE (Batch 2025–2029), mastering data structures, algorithm analysis, low-level systems programming in C/C++, web platforms, and discrete mathematics.
               </p>
             </div>
 

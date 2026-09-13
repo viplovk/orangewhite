@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { ArrowUpRight, Menu, X, Sparkles, Palette } from 'lucide-react';
+import { ArrowUpRight, Menu, X, Sparkles, Palette, Crosshair } from 'lucide-react';
 import { DESIGN_THEMES } from '../data/designThemes';
+import { CursorMode } from './CustomCursor';
 
 interface HeaderProps {
   activeSection: string;
   onNavigate: (sectionId: string) => void;
   activeThemeId?: string;
   onOpenDesignStudio?: () => void;
+  cursorEnabled?: boolean;
+  cursorMode?: CursorMode;
+  onCycleCursorMode?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({ 
@@ -14,6 +18,9 @@ export const Header: React.FC<HeaderProps> = ({
   onNavigate,
   activeThemeId = 'swiss',
   onOpenDesignStudio,
+  cursorEnabled = true,
+  cursorMode = 'reticle',
+  onCycleCursorMode,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const currentTheme = DESIGN_THEMES.find((t) => t.id === activeThemeId) || DESIGN_THEMES[0];
@@ -96,6 +103,17 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           )}
 
+          {onCycleCursorMode && (
+            <button
+              onClick={onCycleCursorMode}
+              className="hidden xl:flex items-center gap-1.5 px-3 border-r-4 border-black bg-white hover:bg-black hover:text-white text-[10px] font-mono font-bold uppercase transition-colors cursor-pointer"
+              title="Cycle Inverted Cursor Style (Reticle / Disc / Precision). Hotkey: Press 'C'"
+            >
+              <Crosshair className="w-3 h-3 text-[#FF3000]" />
+              <span>CURSOR: {cursorMode.toUpperCase()}</span>
+            </button>
+          )}
+
           <div className="flex items-center px-4 border-r-4 border-black bg-[#F2F2F2] text-[11px] font-mono font-bold tracking-tight">
             <span className="inline-block w-2 h-2 bg-[#FF3000] mr-2 animate-pulse" />
             <span className="uppercase text-black">ONLINE // DEL</span>
@@ -158,7 +176,7 @@ export const Header: React.FC<HeaderProps> = ({
           )}
           <div className="p-4 bg-[#F2F2F2] flex items-center justify-between text-xs font-mono font-bold">
             <span className="text-black uppercase">DELHI // GREATER NOIDA</span>
-            <span className="text-[#FF3000]">B.TECH CSE</span>
+            <span className="text-[#FF3000]">B.TECH CSE (2ND YR)</span>
           </div>
         </div>
       )}

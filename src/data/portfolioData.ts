@@ -11,7 +11,7 @@ export const PERSONAL_INFO = {
   ],
   institution: 'IEC COLLEGE OF ENGINEERING & TECHNOLOGY',
   department: 'DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING',
-  academicStanding: 'B.TECH CSE CANDIDATE (2024–2028)',
+  academicStanding: 'B.TECH CSE CANDIDATE (2025–2029) // 2ND YEAR',
   email: 'viplov7@icloud.com',
   githubUsername: 'viplovk',
   githubUrl: 'https://github.com/viplovk',
@@ -70,8 +70,8 @@ export const SPECIFICATIONS: SpecificationItem[] = [
   },
   {
     parameter: 'ACADEMIC SPECIALIZATION',
-    value: 'B.TECH CSE (2024–2028)',
-    detail: 'Undergraduate specialization in Core Systems, Data Structures & Software Engineering',
+    value: 'B.TECH CSE (2025–2029) // 2ND YEAR',
+    detail: 'Undergraduate 2nd Year student in Computer Science & Engineering (Batch 2025–2029)',
     classification: 'ACADEMIC',
   },
   {
@@ -210,20 +210,21 @@ export const PROJECTS: Project[] = [
 export const EDUCATION_TIMELINE: EducationItem[] = [
   {
     id: 'undergraduate',
-    period: '2025 — PRESENT (CURRENT)',
-    stage: 'UNDERGRADUATE STUDIES',
+    period: '2025 — 2029 (CURRENT: 2ND YEAR)',
+    stage: 'UNDERGRADUATE STUDIES (B.TECH 2ND YEAR)',
     institution: 'IEC COLLEGE OF ENGINEERING & TECHNOLOGY',
     location: 'GREATER NOIDA, UTTAR PRADESH, INDIA',
-    score: 'FIRST DIVISION',
-    scoreLabel: 'ACADEMIC STANDING',
+    score: 'BATCH 2025–2029',
+    scoreLabel: 'ENROLLMENT',
     highlights: [
-      'Bachelor of Technology (B.Tech) in Computer Science & Engineering (CSE)',
+      'Bachelor of Technology (B.Tech) in Computer Science & Engineering (CSE) — 2nd Year',
+      'Batch: 2025–2029 | Department of Computer Science & Engineering',
       'Specialization: Core Systems, Algorithms, Distributed Logic & Modern Web Engineering',
-      'Coursework: Advanced Programming, Engineering Mathematics, Computational Systems, Physics',
+      'Coursework: Data Structures & Algorithms, Object-Oriented Programming, Computational Systems, Discrete Mathematics',
       'Active developer behind the open-source IECCET student repository',
     ],
     details:
-      'Pursuing an intensive 4-year curriculum grounded in computation theory, algorithm design, system architecture, and modern distributed software engineering.',
+      'Currently in 2nd year pursuing an intensive 4-year B.Tech curriculum (Batch 2025–2029) grounded in computation theory, algorithm design, system architecture, and modern distributed software engineering.',
   },
   {
     id: 'high-school-12',
@@ -259,17 +260,18 @@ export const EDUCATION_TIMELINE: EducationItem[] = [
   },
   {
     id: 'high-school-10',
-    period: 'COMPLETED 2022',
+    period: 'COMPLETED 2023',
     stage: 'SECONDARY SCHOOL (CLASS X)',
     institution: 'BHARTI PUBLIC SCHOOL',
     location: 'DELHI, INDIA',
     score: 'FIRST CLASS',
     scoreLabel: 'CERTIFICATION',
     highlights: [
+      'Completed Class X Secondary School examinations in 2023',
       'General science, mathematics, computer applications, and social studies',
       'First exposure to computer programming, algorithmic flowcharts, and syntax',
     ],
     details:
-      'Formative education in Delhi, instilling a lifelong enthusiasm for technology, structured logic, and engineering design.',
+      'Formative secondary education in Delhi completed in 2023, instilling a lifelong enthusiasm for technology, structured logic, and engineering design.',
   },
 ];

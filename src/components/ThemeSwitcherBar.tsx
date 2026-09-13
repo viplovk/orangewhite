@@ -1,18 +1,27 @@
 import React, { useState } from 'react';
-import { Sparkles, ChevronRight, Palette, ChevronLeft, Check, Layers } from 'lucide-react';
+import { Sparkles, ChevronRight, Palette, ChevronLeft, Check, Layers, Crosshair } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { DESIGN_THEMES, DesignTheme } from '../data/designThemes';
+import { CursorMode } from './CustomCursor';
 
 interface ThemeSwitcherBarProps {
   activeThemeId: DesignTheme['id'];
   onSelectTheme: (themeId: DesignTheme['id']) => void;
   onOpenDesignStudio: () => void;
+  cursorEnabled?: boolean;
+  cursorMode?: CursorMode;
+  onToggleCursor?: () => void;
+  onCycleCursorMode?: () => void;
 }
 
 export const ThemeSwitcherBar: React.FC<ThemeSwitcherBarProps> = ({
   activeThemeId,
   onSelectTheme,
   onOpenDesignStudio,
+  cursorEnabled = true,
+  cursorMode = 'reticle',
+  onToggleCursor,
+  onCycleCursorMode,
 }) => {
   const [collapsed, setCollapsed] = useState(false);
 
@@ -135,6 +144,38 @@ export const ThemeSwitcherBar: React.FC<ThemeSwitcherBarProps> = ({
                   </button>
                 );
               })}
+            </div>
+
+            {/* Custom Inverting Cursor Quick Switcher */}
+            <div className="flex items-center justify-between gap-1 p-1 bg-neutral-100 border border-black/15 text-[10px]">
+              <div className="flex items-center gap-1.5">
+                <Crosshair className="w-3.5 h-3.5 text-black" />
+                <span className="font-mono font-bold uppercase text-black">INVERT CURSOR</span>
+              </div>
+              <div className="flex items-center gap-1">
+                {cursorEnabled && onCycleCursorMode && (
+                  <button
+                    onClick={onCycleCursorMode}
+                    className="px-1.5 py-0.5 bg-white hover:bg-black hover:text-white border border-black/30 text-[9px] font-mono font-bold uppercase transition-all cursor-pointer"
+                    title="Cycle cursor style (Reticle / Disc / Precision). Hotkey: Press 'C'"
+                  >
+                    {cursorMode.toUpperCase()}
+                  </button>
+                )}
+                {onToggleCursor && (
+                  <button
+                    onClick={onToggleCursor}
+                    className={`px-1.5 py-0.5 font-mono font-bold text-[9px] uppercase border transition-all cursor-pointer ${
+                      cursorEnabled
+                        ? 'bg-black text-white border-black hover:bg-[#FF3000]'
+                        : 'bg-white text-neutral-500 border-neutral-300 hover:border-black'
+                    }`}
+                    title={cursorEnabled ? 'Disable custom inverted cursor' : 'Enable custom inverted cursor'}
+                  >
+                    {cursorEnabled ? 'ACTIVE' : 'OFF'}
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* Launch full showroom button */}

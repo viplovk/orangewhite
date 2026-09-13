@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { SOCIAL_LINKS, PERSONAL_INFO } from '../data/portfolioData';
-import { ArrowUpRight, Check, Copy, ExternalLink, Mail, Send, Terminal } from 'lucide-react';
+import { ArrowUpRight, Check, Copy, ExternalLink, Mail, Send, Terminal, Sparkles } from 'lucide-react';
+import { sound } from '../lib/sound';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export const ContactSection: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -13,7 +18,31 @@ export const ContactSection: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const [transmissionStatus, setTransmissionStatus] = useState<string | null>(null);
 
+  const sectionRef = useRef<HTMLElement>(null);
+  const editorialHeadingRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!sectionRef.current || !editorialHeadingRef.current) return;
+
+    const ctx = gsap.context(() => {
+      gsap.from(editorialHeadingRef.current, {
+        opacity: 0,
+        y: 30,
+        duration: 0.8,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top 80%',
+          toggleActions: 'play none none reverse',
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
   const handleCopyEmail = () => {
+    sound.playClick();
     navigator.clipboard.writeText(PERSONAL_INFO.email);
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
@@ -23,10 +52,10 @@ export const ContactSection: React.FC = () => {
     e.preventDefault();
     if (!formData.email || !formData.message) return;
 
-    setTransmissionStatus('TRANSMITTING...');
+    sound.playClick();
+    setTransmissionStatus('TRANSMITTING PAYLOAD...');
     setTimeout(() => {
-      setTransmissionStatus('DISPATCH CONFIRMED // PACKET LOGGED (LOCAL SIMULATION)');
-      // Open mailto fallback as convenient real dispatch
+      setTransmissionStatus('DISPATCH CONFIRMED // PACKET ENQUEUED');
       const mailtoUrl = `mailto:${PERSONAL_INFO.email}?subject=${encodeURIComponent(
         formData.subject || 'Portfolio Inquiry'
       )}&body=${encodeURIComponent(`From: ${formData.name} (${formData.email})\n\n${formData.message}`)}`;
@@ -36,29 +65,58 @@ export const ContactSection: React.FC = () => {
 
   return (
     <section
+      ref={sectionRef}
       id="contact"
       className="w-full border-b-4 border-black bg-white relative"
     >
-      {/* Section Header Banner */}
-      <div className="border-b-4 border-black bg-[#F2F2F2] p-6 sm:p-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <span className="text-xs font-mono font-bold tracking-widest text-[#FF3000] uppercase block mb-1">
-            04. NETWORK PROTOCOL & TELEMETRY
-          </span>
-          <h2 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tighter uppercase text-black">
-            CONNECT & TRANSMIT
-          </h2>
+      {/* Massive Editorial Cinematic Banner: "LET'S BUILD SOMETHING IMPOSSIBLE." */}
+      <div
+        ref={editorialHeadingRef}
+        className="p-8 sm:p-14 md:p-20 border-b-4 border-black bg-black text-white relative overflow-hidden"
+      >
+        <div className="flex items-center gap-2 text-xs font-mono font-bold tracking-widest text-[#FF3000] uppercase mb-4">
+          <span className="w-2.5 h-2.5 bg-[#FF3000] animate-ping" />
+          <span>DIRECT TRANSMISSION PROTOCOL // REACH OUT</span>
         </div>
 
-        {/* Copy Direct Email Button */}
-        <button
-          id="btn-copy-email"
-          onClick={handleCopyEmail}
-          className="h-12 px-6 bg-black text-white hover:bg-[#FF3000] uppercase font-black text-xs tracking-widest flex items-center gap-2 transition-all duration-200 cursor-pointer shadow-xs hover:shadow-sm"
-        >
-          {copied ? <Check className="w-4 h-4 text-white animate-bounce" /> : <Copy className="w-4 h-4" />}
-          <span>{copied ? 'COPIED TO CLIPBOARD' : 'COPY EMAIL: VIPLOV7@ICLOUD.COM'}</span>
-        </button>
+        <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase tracking-tighter leading-[0.9] text-white max-w-5xl">
+          LET&apos;S BUILD <span className="text-[#FF3000]">SOMETHING</span> IMPOSSIBLE.
+        </h2>
+
+        <p className="mt-6 text-sm sm:text-base font-medium text-neutral-400 font-sans max-w-2xl leading-relaxed">
+          Open for software engineering internships, systems programming collaborations, academic research, and high-precision computational projects.
+        </p>
+
+        <div className="mt-8 flex flex-wrap items-center gap-4">
+          <button
+            onClick={handleCopyEmail}
+            data-cursor-text="COPY"
+            className="h-14 px-8 bg-white text-black hover:bg-[#FF3000] hover:text-white uppercase font-black text-xs sm:text-sm tracking-widest flex items-center gap-3 transition-all duration-150 cursor-pointer"
+          >
+            {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+            <span>{copied ? 'EMAIL COPIED TO CLIPBOARD' : 'COPY EMAIL // VIPLOV7@ICLOUD.COM'}</span>
+          </button>
+
+          <a
+            href="mailto:viplov7@icloud.com"
+            data-cursor-text="MAIL"
+            className="h-14 px-8 bg-neutral-900 border-2 border-neutral-700 text-white hover:bg-white hover:text-black uppercase font-black text-xs sm:text-sm tracking-widest flex items-center gap-2 transition-all duration-150"
+          >
+            <span>LAUNCH MAIL CLIENT</span>
+            <ArrowUpRight className="w-4 h-4" />
+          </a>
+        </div>
+      </div>
+
+      {/* Section Header Strip */}
+      <div className="border-b-4 border-black bg-[#F2F2F2] p-4 sm:px-10 flex flex-col md:flex-row md:items-center justify-between gap-4 font-mono text-xs font-bold">
+        <div className="flex items-center gap-2">
+          <span className="text-[#FF3000]">04.</span>
+          <span className="uppercase text-black">NETWORK PROTOCOL & TELEMETRY</span>
+        </div>
+        <div className="text-neutral-600">
+          HOST: DELHI [28.6139° N] // CAMPUS: GREATER NOIDA [77.5040° E]
+        </div>
       </div>
 
       {/* Asymmetric 2-Column Grid */}
@@ -68,10 +126,10 @@ export const ContactSection: React.FC = () => {
           <div>
             <div className="flex items-center gap-2 pb-4 mb-6 border-b-2 border-black/20 text-xs font-mono font-bold tracking-widest uppercase text-neutral-600">
               <span className="w-2.5 h-2.5 bg-[#FF3000]" />
-              <span>TRANSMISSION TERMINAL // FORM PROTOCOL</span>
+              <span>TERMINAL DISPATCH // ENCRYPTED ENVELOPE</span>
             </div>
 
-            <form onSubmit={handleSend} className="space-y-6">
+            <form onSubmit={handleSend} className="space-y-5">
               <div>
                 <label className="block text-xs font-mono font-bold uppercase tracking-widest text-black mb-2">
                   01. SENDER IDENTITY [NAME]
@@ -81,7 +139,7 @@ export const ContactSection: React.FC = () => {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="E.G. PROF. SMITH / RECRUITER"
+                  placeholder="E.G. PROFESSOR / ENGINEERING LEAD"
                   className="w-full h-12 px-4 bg-[#F2F2F2] border-2 border-black text-sm font-mono uppercase font-bold text-black placeholder:text-neutral-400 focus:outline-none focus:border-[#FF3000] focus:bg-white transition-all duration-200"
                 />
               </div>
@@ -108,7 +166,7 @@ export const ContactSection: React.FC = () => {
                   type="text"
                   value={formData.subject}
                   onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                  placeholder="PROJECT COLLABORATION // INTERNSHIP // INQUIRY"
+                  placeholder="INTERNSHIP // CODE COLLABORATION // INQUIRY"
                   className="w-full h-12 px-4 bg-[#F2F2F2] border-2 border-black text-sm font-mono uppercase font-bold text-black placeholder:text-neutral-400 focus:outline-none focus:border-[#FF3000] focus:bg-white transition-all duration-200"
                 />
               </div>
@@ -122,7 +180,7 @@ export const ContactSection: React.FC = () => {
                   rows={4}
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  placeholder="INPUT DETAILS REGARDING THE PROPOSED COMPUTATION OR OPPORTUNITY..."
+                  placeholder="INPUT DETAILS REGARDING THE OPPORTUNITY OR PROPOSAL..."
                   className="w-full p-4 bg-[#F2F2F2] border-2 border-black text-sm font-mono uppercase font-bold text-black placeholder:text-neutral-400 focus:outline-none focus:border-[#FF3000] focus:bg-white transition-all duration-200 resize-none"
                 />
               </div>
@@ -130,9 +188,10 @@ export const ContactSection: React.FC = () => {
               <button
                 type="submit"
                 id="btn-submit-transmission"
+                data-cursor-text="SEND"
                 className="w-full h-14 bg-black text-white text-xs font-black tracking-widest uppercase hover:bg-[#FF3000] transition-all duration-200 flex items-center justify-between px-6 cursor-pointer group shadow-xs hover:shadow-sm"
               >
-                <span>DISPATCH TRANSMISSION</span>
+                <span>TRANSMIT PAYLOAD VIA CLIENT</span>
                 <Send className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
               </button>
 
@@ -145,22 +204,23 @@ export const ContactSection: React.FC = () => {
             </form>
           </div>
 
-          <div className="mt-8 pt-6 border-t-2 border-black/20 text-[10px] font-mono text-neutral-500 uppercase">
-            END-TO-END TRANSMISSION ENCODING // DIRECT DISPATCH
+          <div className="mt-8 pt-6 border-t-2 border-black/20 text-[10px] font-mono text-neutral-500 uppercase flex items-center justify-between">
+            <span>DIRECT PROTOCOL // 0% LOSS</span>
+            <span className="text-[#FF3000]">VIPLOV7@ICLOUD.COM</span>
           </div>
         </div>
 
         {/* Right Column: Direct Channels Matrix (6 Cols) */}
         <div className="lg:col-span-6 bg-white divide-y-4 divide-black">
-          <div className="p-6 sm:p-8 bg-black text-white">
+          <div className="p-6 sm:p-8 bg-neutral-900 text-white">
             <span className="text-xs font-mono font-bold tracking-widest text-[#FF3000] uppercase block mb-1">
               OFFICIAL CHANNELS
             </span>
             <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tight">
               COMMUNICATION REGISTRY
             </h3>
-            <p className="text-xs font-sans text-neutral-300 mt-1">
-              Direct verification links across digital networks and developer nodes.
+            <p className="text-xs font-sans text-neutral-400 mt-1">
+              Direct verification links across authenticated networks and developer nodes.
             </p>
           </div>
 
@@ -171,6 +231,8 @@ export const ContactSection: React.FC = () => {
               href={link.url}
               target="_blank"
               rel="noreferrer"
+              onClick={() => sound.playClick()}
+              data-cursor-text="OPEN"
               className="p-6 sm:p-8 flex items-center justify-between hover:bg-[#FF3000] hover:text-white transition-all duration-200 group cursor-pointer"
             >
               <div className="flex items-center gap-4 transition-transform duration-200 group-hover:translate-x-1">

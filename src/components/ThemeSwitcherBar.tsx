@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Sparkles, ChevronRight, Palette, ChevronLeft, Check, Layers, Crosshair } from 'lucide-react';
+import { Sparkles, ChevronRight, Palette, ChevronLeft, Check, Layers, Crosshair, Volume2, VolumeX } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { DESIGN_THEMES, DesignTheme } from '../data/designThemes';
 import { CursorMode } from './CustomCursor';
+import { sound } from '../lib/sound';
 
 interface ThemeSwitcherBarProps {
   activeThemeId: DesignTheme['id'];
@@ -24,20 +25,28 @@ export const ThemeSwitcherBar: React.FC<ThemeSwitcherBarProps> = ({
   onCycleCursorMode,
 }) => {
   const [collapsed, setCollapsed] = useState(false);
+  const [audioEnabled, setAudioEnabled] = useState(sound.isSoundEnabled());
 
   const currentThemeIndex = DESIGN_THEMES.findIndex((t) => t.id === activeThemeId);
   const activeTheme = DESIGN_THEMES[currentThemeIndex] || DESIGN_THEMES[0];
 
   const handleNextTheme = (e: React.MouseEvent) => {
     e.stopPropagation();
+    sound.playClick();
     const nextIdx = (currentThemeIndex + 1) % DESIGN_THEMES.length;
     onSelectTheme(DESIGN_THEMES[nextIdx].id);
   };
 
   const handlePrevTheme = (e: React.MouseEvent) => {
     e.stopPropagation();
+    sound.playClick();
     const prevIdx = (currentThemeIndex - 1 + DESIGN_THEMES.length) % DESIGN_THEMES.length;
     onSelectTheme(DESIGN_THEMES[prevIdx].id);
+  };
+
+  const handleToggleAudio = () => {
+    const nextState = sound.toggleMute();
+    setAudioEnabled(nextState);
   };
 
   return (
@@ -53,7 +62,10 @@ export const ThemeSwitcherBar: React.FC<ThemeSwitcherBarProps> = ({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.2 }}
-            onClick={() => setCollapsed(false)}
+            onClick={() => {
+              sound.playClick();
+              setCollapsed(false);
+            }}
             className="flex items-center gap-2 px-3 py-2 bg-black text-white border-2 border-black shadow-[3px_3px_0px_rgba(0,0,0,0.4)] text-xs font-bold uppercase tracking-wider hover:bg-[#FF3000] transition-all cursor-pointer hover:shadow-[4px_4px_0px_rgba(0,0,0,0.5)]"
             title="Open Design Switcher"
           >
@@ -76,10 +88,13 @@ export const ThemeSwitcherBar: React.FC<ThemeSwitcherBarProps> = ({
                   className="w-2.5 h-2.5 inline-block transition-colors duration-200"
                   style={{ backgroundColor: activeTheme.colors.accent }}
                 />
-                <span className="tracking-wider">DESIGN STUDIO // THEME</span>
+                <span className="tracking-wider">SYSTEM HUD // SETTINGS</span>
               </div>
               <button
-                onClick={() => setCollapsed(true)}
+                onClick={() => {
+                  sound.playClick();
+                  setCollapsed(true);
+                }}
                 className="hover:text-black text-neutral-400 cursor-pointer text-[11px] transition-colors"
                 title="Minimize"
               >
@@ -98,7 +113,10 @@ export const ThemeSwitcherBar: React.FC<ThemeSwitcherBarProps> = ({
               </button>
 
               <div
-                onClick={onOpenDesignStudio}
+                onClick={() => {
+                  sound.playClick();
+                  onOpenDesignStudio();
+                }}
                 className="flex-1 text-center cursor-pointer px-2 py-0.5 hover:bg-white transition-all"
                 title="Click to open Design Studio showroom"
               >
@@ -126,7 +144,10 @@ export const ThemeSwitcherBar: React.FC<ThemeSwitcherBarProps> = ({
                 return (
                   <button
                     key={theme.id}
-                    onClick={() => onSelectTheme(theme.id)}
+                    onClick={() => {
+                      sound.playClick();
+                      onSelectTheme(theme.id);
+                    }}
                     className={`p-1.5 text-[9px] font-bold uppercase tracking-tight flex flex-col items-center gap-1 border transition-all duration-200 cursor-pointer ${
                       isSelected
                         ? 'border-black bg-black text-white shadow-xs scale-105'
@@ -146,41 +167,61 @@ export const ThemeSwitcherBar: React.FC<ThemeSwitcherBarProps> = ({
               })}
             </div>
 
-            {/* Custom Inverting Cursor Quick Switcher */}
-            <div className="flex items-center justify-between gap-1 p-1 bg-neutral-100 border border-black/15 text-[10px]">
-              <div className="flex items-center gap-1.5">
-                <Crosshair className="w-3.5 h-3.5 text-black" />
-                <span className="font-mono font-bold uppercase text-black">INVERT CURSOR</span>
-              </div>
-              <div className="flex items-center gap-1">
-                {cursorEnabled && onCycleCursorMode && (
-                  <button
-                    onClick={onCycleCursorMode}
-                    className="px-1.5 py-0.5 bg-white hover:bg-black hover:text-white border border-black/30 text-[9px] font-mono font-bold uppercase transition-all cursor-pointer"
-                    title="Cycle cursor style (Reticle / Disc / Precision). Hotkey: Press 'C'"
-                  >
-                    {cursorMode.toUpperCase()}
-                  </button>
-                )}
+            {/* Inverted Cursor + Audio Controls Row */}
+            <div className="grid grid-cols-2 gap-1 text-[10px]">
+              {/* Cursor Controller */}
+              <div className="flex items-center justify-between p-1 bg-neutral-100 border border-black/15">
+                <div className="flex items-center gap-1">
+                  <Crosshair className="w-3 h-3 text-black" />
+                  <span className="font-mono font-bold uppercase text-[9px]">CURSOR</span>
+                </div>
                 {onToggleCursor && (
                   <button
-                    onClick={onToggleCursor}
-                    className={`px-1.5 py-0.5 font-mono font-bold text-[9px] uppercase border transition-all cursor-pointer ${
+                    onClick={() => {
+                      sound.playClick();
+                      onToggleCursor();
+                    }}
+                    className={`px-1.5 py-0.5 font-mono font-bold text-[8px] uppercase border transition-all cursor-pointer ${
                       cursorEnabled
                         ? 'bg-black text-white border-black hover:bg-[#FF3000]'
                         : 'bg-white text-neutral-500 border-neutral-300 hover:border-black'
                     }`}
-                    title={cursorEnabled ? 'Disable custom inverted cursor' : 'Enable custom inverted cursor'}
                   >
-                    {cursorEnabled ? 'ACTIVE' : 'OFF'}
+                    {cursorEnabled ? 'ON' : 'OFF'}
                   </button>
                 )}
+              </div>
+
+              {/* Web Audio Synthesizer */}
+              <div className="flex items-center justify-between p-1 bg-neutral-100 border border-black/15">
+                <div className="flex items-center gap-1">
+                  {audioEnabled ? (
+                    <Volume2 className="w-3 h-3 text-[#FF3000]" />
+                  ) : (
+                    <VolumeX className="w-3 h-3 text-neutral-400" />
+                  )}
+                  <span className="font-mono font-bold uppercase text-[9px]">SOUND</span>
+                </div>
+                <button
+                  onClick={handleToggleAudio}
+                  className={`px-1.5 py-0.5 font-mono font-bold text-[8px] uppercase border transition-all cursor-pointer ${
+                    audioEnabled
+                      ? 'bg-black text-white border-black hover:bg-[#FF3000]'
+                      : 'bg-white text-neutral-500 border-neutral-300 hover:border-black'
+                  }`}
+                  title={audioEnabled ? 'Mute Web Audio effects' : 'Enable Web Audio micro-feedback'}
+                >
+                  {audioEnabled ? 'ON' : 'MUTED'}
+                </button>
               </div>
             </div>
 
             {/* Launch full showroom button */}
             <button
-              onClick={onOpenDesignStudio}
+              onClick={() => {
+                sound.playClick();
+                onOpenDesignStudio();
+              }}
               className="w-full py-1.5 px-2 bg-black text-white hover:bg-[#FF3000] text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-1.5 cursor-pointer transition-all duration-200 shadow-xs hover:shadow-sm"
             >
               <Sparkles className="w-3.5 h-3.5 text-[#00FF66]" />

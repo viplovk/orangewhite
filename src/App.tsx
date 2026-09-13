@@ -3,16 +3,19 @@ import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { ProfileSpecs } from './components/ProfileSpecs';
 import { ProjectsSection } from './components/ProjectsSection';
+import { GithubTerminal } from './components/GithubTerminal';
 import { AcademicsSection } from './components/AcademicsSection';
 import { ContactSection } from './components/ContactSection';
 import { Footer } from './components/Footer';
 import { DesignStudioModal } from './components/DesignStudioModal';
 import { ThemeSwitcherBar } from './components/ThemeSwitcherBar';
 import { CustomCursor, CursorMode } from './components/CustomCursor';
+import { SystemLoader } from './components/SystemLoader';
 import { DesignTheme } from './data/designThemes';
 
 export default function App() {
   const [activeSection, setActiveSection] = useState<string>('hero');
+  const [isBootLoaded, setIsBootLoaded] = useState<boolean>(false);
   const [activeThemeId, setActiveThemeId] = useState<DesignTheme['id']>(() => {
     try {
       const saved = localStorage.getItem('viplov_portfolio_theme') as DesignTheme['id'];
@@ -110,7 +113,7 @@ export default function App() {
   // Scroll listener to update active section indicator
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['hero', 'profile', 'projects', 'academics', 'contact'];
+      const sections = ['hero', 'profile', 'projects', 'github', 'academics', 'contact'];
       const scrollPosition = window.scrollY + 200;
 
       for (const sectionId of sections) {
@@ -144,6 +147,11 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-white text-black font-sans selection:bg-[#FF3000] selection:text-white flex flex-col transition-colors duration-200">
+      {/* 1-Second Cinematic System Loader */}
+      {!isBootLoaded && (
+        <SystemLoader onComplete={() => setIsBootLoaded(true)} />
+      )}
+
       {/* Structural Container */}
       <div className="w-full max-w-[1600px] mx-auto border-x-4 border-black min-h-screen flex flex-col bg-white">
         {/* Sticky Header */}
@@ -165,6 +173,9 @@ export default function App() {
           />
           <ProfileSpecs />
           <ProjectsSection />
+          <div id="github">
+            <GithubTerminal />
+          </div>
           <AcademicsSection />
           <ContactSection />
         </main>
@@ -173,7 +184,7 @@ export default function App() {
         <Footer />
       </div>
 
-      {/* Floating Theme Controller Pill Bar */}
+      {/* Floating Theme & System Controller Bar */}
       <ThemeSwitcherBar
         activeThemeId={activeThemeId}
         onSelectTheme={handleSelectTheme}
@@ -184,7 +195,7 @@ export default function App() {
         onCycleCursorMode={handleCycleCursorMode}
       />
 
-      {/* Unique Inverted Optical Custom Cursor */}
+      {/* Inverted Optical Custom Cursor with Magnetic Tracking */}
       <CustomCursor
         enabled={cursorEnabled}
         mode={cursorMode}
@@ -192,7 +203,7 @@ export default function App() {
         onCycleMode={handleCycleCursorMode}
       />
 
-      {/* Comprehensive Design Studio Showroom Modal */}
+      {/* Design Studio Showroom Modal */}
       <DesignStudioModal
         isOpen={isDesignStudioOpen}
         onClose={() => setIsDesignStudioOpen(false)}

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { ArrowUpRight, Menu, X, Sparkles, Palette, Crosshair } from 'lucide-react';
+import { ArrowUpRight, Menu, X, Sparkles, Crosshair, Volume2, VolumeX } from 'lucide-react';
 import { DESIGN_THEMES } from '../data/designThemes';
 import { CursorMode } from './CustomCursor';
+import { sound } from '../lib/sound';
 
 interface HeaderProps {
   activeSection: string;
@@ -23,18 +24,26 @@ export const Header: React.FC<HeaderProps> = ({
   onCycleCursorMode,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [audioEnabled, setAudioEnabled] = useState(sound.isSoundEnabled());
   const currentTheme = DESIGN_THEMES.find((t) => t.id === activeThemeId) || DESIGN_THEMES[0];
 
   const navItems = [
     { id: 'profile', label: '01. SPECIFICATION' },
     { id: 'projects', label: '02. REPOSITORIES' },
-    { id: 'academics', label: '03. ACADEMICS' },
-    { id: 'contact', label: '04. TELEMETRY' },
+    { id: 'github', label: '03. GITHUB CLI' },
+    { id: 'academics', label: '04. ACADEMICS' },
+    { id: 'contact', label: '05. TELEMETRY' },
   ];
 
   const handleNavClick = (id: string) => {
+    sound.playClick();
     onNavigate(id);
     setMobileMenuOpen(false);
+  };
+
+  const handleToggleSound = () => {
+    const nextState = sound.toggleMute();
+    setAudioEnabled(nextState);
   };
 
   return (
@@ -69,7 +78,7 @@ export const Header: React.FC<HeaderProps> = ({
                 key={item.id}
                 id={`nav-link-${item.id}`}
                 onClick={() => handleNavClick(item.id)}
-                className={`flex-1 flex items-center justify-center px-4 border-r-4 border-black text-xs font-black tracking-widest uppercase transition-all duration-150 relative overflow-hidden group ${
+                className={`flex-1 flex items-center justify-center px-4 border-r-4 border-black text-xs font-black tracking-widest uppercase transition-all duration-150 relative overflow-hidden group cursor-pointer ${
                   isActive
                     ? 'bg-black text-white'
                     : 'bg-white text-black hover:bg-[#FF3000] hover:text-white'
@@ -84,12 +93,29 @@ export const Header: React.FC<HeaderProps> = ({
           })}
         </nav>
 
-        {/* Action Button, Design Studio Trigger & Telemetry indicator */}
+        {/* Action Button, Design Studio Trigger, Audio & Telemetry indicator */}
         <div className="hidden sm:flex items-stretch">
+          {/* Sound Synthesizer Toggle */}
+          <button
+            onClick={handleToggleSound}
+            className="flex items-center gap-1.5 px-3.5 border-r-4 border-black bg-white hover:bg-black hover:text-white text-[10px] font-mono font-bold uppercase transition-colors cursor-pointer"
+            title={audioEnabled ? 'Mute micro-interaction audio feedback' : 'Enable procedural web audio synthesizer'}
+          >
+            {audioEnabled ? (
+              <Volume2 className="w-3.5 h-3.5 text-[#FF3000]" />
+            ) : (
+              <VolumeX className="w-3.5 h-3.5 text-neutral-400" />
+            )}
+            <span className="hidden xl:inline">AUDIO: {audioEnabled ? 'ON' : 'MUTED'}</span>
+          </button>
+
           {onOpenDesignStudio && (
             <button
               id="header-btn-design-studio"
-              onClick={onOpenDesignStudio}
+              onClick={() => {
+                sound.playClick();
+                onOpenDesignStudio();
+              }}
               className="flex items-center gap-2 px-3 sm:px-4 border-r-4 border-black bg-white hover:bg-black hover:text-white transition-colors duration-150 cursor-pointer text-xs font-mono font-bold tracking-wider uppercase group"
               title="Explore Design Options"
             >
@@ -105,7 +131,10 @@ export const Header: React.FC<HeaderProps> = ({
 
           {onCycleCursorMode && (
             <button
-              onClick={onCycleCursorMode}
+              onClick={() => {
+                sound.playClick();
+                onCycleCursorMode();
+              }}
               className="hidden xl:flex items-center gap-1.5 px-3 border-r-4 border-black bg-white hover:bg-black hover:text-white text-[10px] font-mono font-bold uppercase transition-colors cursor-pointer"
               title="Cycle Inverted Cursor Style (Reticle / Disc / Precision). Hotkey: Press 'C'"
             >
@@ -118,6 +147,7 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="inline-block w-2 h-2 bg-[#FF3000] mr-2 animate-pulse" />
             <span className="uppercase text-black">ONLINE // DEL</span>
           </div>
+
           <button
             id="header-cta-contact"
             onClick={() => handleNavClick('contact')}
@@ -132,8 +162,11 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex lg:hidden items-stretch">
           <button
             id="mobile-menu-toggle"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="flex items-center justify-center w-16 sm:w-20 border-l-4 border-black bg-white hover:bg-black hover:text-white transition-colors duration-150"
+            onClick={() => {
+              sound.playClick();
+              setMobileMenuOpen(!mobileMenuOpen);
+            }}
+            className="flex items-center justify-center w-16 sm:w-20 border-l-4 border-black bg-white hover:bg-black hover:text-white transition-colors duration-150 cursor-pointer"
             aria-label="Toggle Navigation"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -152,7 +185,7 @@ export const Header: React.FC<HeaderProps> = ({
               key={item.id}
               id={`mobile-nav-${item.id}`}
               onClick={() => handleNavClick(item.id)}
-              className="w-full text-left py-4 px-6 text-sm font-black tracking-widest uppercase hover:bg-[#FF3000] hover:text-white transition-colors duration-150 flex items-center justify-between"
+              className="w-full text-left py-4 px-6 text-sm font-black tracking-widest uppercase hover:bg-[#FF3000] hover:text-white transition-colors duration-150 flex items-center justify-between cursor-pointer"
             >
               <span>{item.label}</span>
               <span className="text-[#FF3000] group-hover:text-white font-mono text-xs">→</span>
@@ -162,6 +195,7 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               id="mobile-nav-design-studio"
               onClick={() => {
+                sound.playClick();
                 setMobileMenuOpen(false);
                 onOpenDesignStudio();
               }}

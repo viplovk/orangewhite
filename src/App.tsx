@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useCallback } from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { ProfileSpecs } from './components/ProfileSpecs';
 import { ProjectsSection } from './components/ProjectsSection';
+import { Experiments } from './components/experiments/Experiments';
 import { GithubTerminal } from './components/GithubTerminal';
 import { AcademicsSection } from './components/AcademicsSection';
 import { ContactSection } from './components/ContactSection';
@@ -13,23 +14,30 @@ import { CustomCursor, CursorMode } from './components/CustomCursor';
 import { SystemLoader } from './components/SystemLoader';
 import { ThemeFadeThrough } from './components/ThemeFadeThrough';
 import { DesignTheme } from './data/designThemes';
+import { sound } from './lib/sound';
+import {
+  ThemeState,
+  getInitialTheme,
+  applyThemeToDOM,
+} from './lib/themeManager';
 
 export default function App() {
   const [activeSection, setActiveSection] = useState<string>('hero');
   const [isBootLoaded, setIsBootLoaded] = useState<boolean>(false);
-  const [activeThemeId, setActiveThemeId] = useState<DesignTheme['id']>(() => {
-    try {
-      const saved = localStorage.getItem('viplov_portfolio_theme') as DesignTheme['id'];
-      if (saved && ['swiss', 'cyber', 'modern-dark', 'editorial', 'neo-pop'].includes(saved)) {
-        return saved;
-      }
-    } catch {
-      // ignore
-    }
-    return 'swiss';
-  });
-  const [pendingThemeId, setPendingThemeId] = useState<DesignTheme['id'] | null>(null);
+
+  // Atomic Theme State: current theme and active transition lock
+  const [themeState, setThemeState] = useState<ThemeState>(() => ({
+    current: getInitialTheme(),
+    transition: null,
+  }));
+  const activeThemeId = themeState.current;
+
   const [isDesignStudioOpen, setIsDesignStudioOpen] = useState(false);
+
+  // Initial synchronous application of theme classes to document.body
+  useLayoutEffect(() => {
+    applyThemeToDOM(themeState.current);
+  }, []);
 
   // Inverted Custom Cursor State
   const [cursorEnabled, setCursorEnabled] = useState<boolean>(() => {
@@ -92,30 +100,10 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Sync theme to document body class and storage
-  useEffect(() => {
-    try {
-      localStorage.setItem('viplov_portfolio_theme', activeThemeId);
-    } catch {
-      // ignore
-    }
-
-    // Remove all previous theme classes
-    document.body.classList.remove(
-      'theme-swiss', 
-      'theme-cyber', 
-      'theme-modern-dark', 
-      'theme-editorial', 
-      'theme-neo-pop'
-    );
-    // Add current theme class
-    document.body.classList.add(`theme-${activeThemeId}`);
-  }, [activeThemeId]);
-
   // Scroll listener to update active section indicator
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['hero', 'profile', 'projects', 'github', 'academics', 'contact'];
+      const sections = ['hero', 'profile', 'projects', 'experiments', 'github', 'academics', 'contact'];
       const scrollPosition = window.scrollY + 200;
 
       for (const sectionId of sections) {
@@ -143,20 +131,61 @@ export default function App() {
     }
   };
 
-  // Safety watchdog: Ensure pending theme transitions always unlock and apply smoothly
-  useEffect(() => {
-    if (!pendingThemeId) return;
-    const watchdog = setTimeout(() => {
-      setActiveThemeId(pendingThemeId);
-      setPendingThemeId(null);
-    }, 550);
-    return () => clearTimeout(watchdog);
-  }, [pendingThemeId]);
+  // Atomic state guard: Initiates theme transition if not already transitioning
+  const handleSelectTheme = useCallback((targetThemeId: DesignTheme['id']) => {
+    setThemeState((prev) => {
+      if (prev.transition !== null || prev.current === targetThemeId) {
+        return prev;
+      }
+      return {
+        current: prev.current,
+        transition: {
+          from: prev.current,
+          to: targetThemeId,
+        },
+      };
+    });
+  }, []);
 
-  const handleSelectTheme = (themeId: DesignTheme['id']) => {
-    if (themeId === activeThemeId) return;
-    setPendingThemeId(themeId);
-  };
+  // Strictly sequential execution: Invoked when viewport curtain is 100% opaque
+  const handleCovered = useCallback((toThemeId: DesignTheme['id']) => {
+    // 1. Strictly sequential class application to body & reflow
+    applyThemeToDOM(toThemeId);
+
+    // 2. Tactile audio feedback
+    try {
+      sound.playModeSwitch();
+    } catch {
+      // ignore
+    }
+
+    // 3. Atomically update current theme while transition is active
+    setThemeState((prev) => ({
+      current: toThemeId,
+      transition: prev.transition,
+    }));
+  }, []);
+
+  // Invoked when curtain reveal completes: Releases the transition lock atomically
+  const handleTransitionCompleted = useCallback(() => {
+    setThemeState((prev) => ({
+      current: prev.current,
+      transition: null,
+    }));
+  }, []);
+
+  // Safety watchdog: Guarantees lock release and DOM synchronization if browser tab sleeps
+  useEffect(() => {
+    if (!themeState.transition) return;
+    const watchdog = setTimeout(() => {
+      applyThemeToDOM(themeState.transition.to);
+      setThemeState((prev) => ({
+        current: prev.transition ? prev.transition.to : prev.current,
+        transition: null,
+      }));
+    }, 700);
+    return () => clearTimeout(watchdog);
+  }, [themeState.transition]);
 
   return (
     <div className="min-h-screen bg-white text-black font-sans selection:bg-[#FF3000] selection:text-white flex flex-col transition-colors duration-200">
@@ -167,10 +196,9 @@ export default function App() {
 
       {/* Swiss International Typographic Fade-Through Theme Transition Overlay */}
       <ThemeFadeThrough
-        targetThemeId={pendingThemeId}
-        activeThemeId={activeThemeId}
-        onApplyTheme={(newThemeId) => setActiveThemeId(newThemeId)}
-        onComplete={() => setPendingThemeId(null)}
+        transition={themeState.transition}
+        onCovered={handleCovered}
+        onCompleted={handleTransitionCompleted}
       />
 
       {/* Structural Container */}
@@ -194,6 +222,7 @@ export default function App() {
           />
           <ProfileSpecs />
           <ProjectsSection />
+          <Experiments />
           <div id="github">
             <GithubTerminal />
           </div>

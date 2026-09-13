@@ -30,9 +30,10 @@ export const Header: React.FC<HeaderProps> = ({
   const navItems = [
     { id: 'profile', label: '01. SPECIFICATION' },
     { id: 'projects', label: '02. REPOSITORIES' },
-    { id: 'github', label: '03. GITHUB CLI' },
-    { id: 'academics', label: '04. ACADEMICS' },
-    { id: 'contact', label: '05. TELEMETRY' },
+    { id: 'experiments', label: '03. EXPERIMENTS' },
+    { id: 'github', label: '04. GITHUB CLI' },
+    { id: 'academics', label: '05. ACADEMICS' },
+    { id: 'contact', label: '06. TELEMETRY' },
   ];
 
   const handleNavClick = (id: string) => {

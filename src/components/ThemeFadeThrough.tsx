@@ -1,118 +1,100 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { DesignTheme, DESIGN_THEMES } from '../data/designThemes';
-import { sound } from '../lib/sound';
+import { DESIGN_THEMES } from '../data/designThemes';
+import { ThemeTransition, ThemeId } from '../lib/themeManager';
 
 interface ThemeFadeThroughProps {
-  targetThemeId: DesignTheme['id'] | null;
-  activeThemeId: DesignTheme['id'];
-  onApplyTheme: (themeId: DesignTheme['id']) => void;
-  onComplete: () => void;
+  transition: ThemeTransition | null;
+  onCovered: (toThemeId: ThemeId) => void;
+  onCompleted: () => void;
 }
 
 export const ThemeFadeThrough: React.FC<ThemeFadeThroughProps> = ({
-  targetThemeId,
-  activeThemeId,
-  onApplyTheme,
-  onComplete,
+  transition,
+  onCovered,
+  onCompleted,
 }) => {
-  const [transitionData, setTransitionData] = useState<{
-    targetTheme: DesignTheme;
-    originTheme: DesignTheme;
-    stage: 'covering' | 'revealing';
-  } | null>(null);
+  const [stage, setStage] = useState<'idle' | 'covering' | 'revealing'>('idle');
 
-  // Keep references to handlers to prevent stale closures or redundant effect re-runs
-  const onApplyThemeRef = useRef(onApplyTheme);
-  onApplyThemeRef.current = onApplyTheme;
+  // Keep latest callback references in stable refs to prevent effect re-runs or stale closures
+  const onCoveredRef = useRef(onCovered);
+  onCoveredRef.current = onCovered;
 
-  const onCompleteRef = useRef(onComplete);
-  onCompleteRef.current = onComplete;
-
-  const activeThemeIdRef = useRef(activeThemeId);
-  activeThemeIdRef.current = activeThemeId;
+  const onCompletedRef = useRef(onCompleted);
+  onCompletedRef.current = onCompleted;
 
   const timersRef = useRef<NodeJS.Timeout[]>([]);
 
-  const clearTimers = () => {
-    timersRef.current.forEach(clearTimeout);
-    timersRef.current = [];
-  };
-
   useEffect(() => {
-    // Only initiate if a target is requested and differs from current active theme
-    if (!targetThemeId || targetThemeId === activeThemeIdRef.current) {
+    if (!transition) {
+      setStage('idle');
       return;
     }
 
-    clearTimers();
-
-    const origin =
-      DESIGN_THEMES.find((t) => t.id === activeThemeIdRef.current) || DESIGN_THEMES[0];
-    const target =
-      DESIGN_THEMES.find((t) => t.id === targetThemeId) || DESIGN_THEMES[0];
-
-    // Phase 1: Mount overlay and begin covering viewport
-    setTransitionData({
-      originTheme: origin,
-      targetTheme: target,
-      stage: 'covering',
-    });
+    // Step 1: Initiate covering phase
+    setStage('covering');
 
     const prefersReducedMotion =
       typeof window !== 'undefined' &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const coverDuration = prefersReducedMotion ? 40 : 130;
-    const holdDuration = prefersReducedMotion ? 20 : 50;
+    const holdDuration = prefersReducedMotion ? 20 : 40;
     const revealDuration = prefersReducedMotion ? 50 : 160;
 
-    // Timer 1: Once viewport is fully opaque, apply theme classes underneath
-    const t1 = setTimeout(() => {
-      onApplyThemeRef.current(targetThemeId);
-      try {
-        sound.playModeSwitch();
-      } catch {
-        // ignore audio errors
-      }
+    // Step 2: When viewport is 100% opaque, invoke strictly sequential DOM class application
+    const tCover = setTimeout(() => {
+      onCoveredRef.current(transition.to);
 
-      // Timer 2: Short hold to allow browser layout & paint of new theme classes
-      const t2 = setTimeout(() => {
-        setTransitionData((prev) => (prev ? { ...prev, stage: 'revealing' } : null));
+      // Step 3: Brief hold while fully occluded so browser finishes composite reflow
+      const tHold = setTimeout(() => {
+        setStage('revealing');
 
-        // Timer 3: Reveal completes; clear overlay and reset pending state
-        const t3 = setTimeout(() => {
-          setTransitionData(null);
-          onCompleteRef.current();
+        // Step 4: When reveal animation finishes, release atomic lock
+        const tReveal = setTimeout(() => {
+          setStage('idle');
+          onCompletedRef.current();
         }, revealDuration);
 
-        timersRef.current.push(t3);
+        timersRef.current.push(tReveal);
       }, holdDuration);
 
-      timersRef.current.push(t2);
+      timersRef.current.push(tHold);
     }, coverDuration);
 
-    timersRef.current.push(t1);
+    timersRef.current = [tCover];
 
     return () => {
-      clearTimers();
+      timersRef.current.forEach(clearTimeout);
+      timersRef.current = [];
     };
-  }, [targetThemeId]); // Strictly depend ONLY on targetThemeId to avoid premature re-renders
+  }, [transition?.from, transition?.to]);
+
+  const originTheme = transition
+    ? DESIGN_THEMES.find((t) => t.id === transition.from) || DESIGN_THEMES[0]
+    : null;
+  const targetTheme = transition
+    ? DESIGN_THEMES.find((t) => t.id === transition.to) || DESIGN_THEMES[0]
+    : null;
+
+  const isVisible = stage === 'covering' || stage === 'revealing';
 
   return (
     <AnimatePresence mode="wait">
-      {transitionData && (
+      {isVisible && targetTheme && originTheme && (
         <motion.div
           id="theme-fade-through-overlay"
-          key="theme-fade-through"
+          key={`theme-fade-${transition?.from}-${transition?.to}`}
           initial={{ opacity: 0 }}
-          animate={{ opacity: transitionData.stage === 'revealing' ? 0 : 1 }}
+          animate={{ opacity: stage === 'revealing' ? 0 : 1 }}
           exit={{ opacity: 0 }}
           transition={{
-            duration: transitionData.stage === 'revealing' ? 0.16 : 0.13,
+            duration: stage === 'revealing' ? 0.16 : 0.13,
             ease: [0.16, 1, 0.3, 1],
           }}
-          className="fixed inset-0 z-[99990] pointer-events-auto select-none flex flex-col justify-between p-6 sm:p-10 md:p-14 overflow-hidden bg-[#08090C]/95 backdrop-blur-[2px]"
+          className={`fixed inset-0 z-[99990] select-none flex flex-col justify-between p-6 sm:p-10 md:p-14 overflow-hidden bg-[#08090C]/95 backdrop-blur-[2px] ${
+            stage === 'covering' ? 'pointer-events-auto' : 'pointer-events-none'
+          }`}
           aria-hidden="true"
         >
           {/* Subtle Swiss Architectural Grid Texture */}
@@ -123,7 +105,7 @@ export const ThemeFadeThrough: React.FC<ThemeFadeThroughProps> = ({
             <div className="flex items-center gap-2 sm:gap-3">
               <span
                 className="inline-block w-2 h-2 animate-pulse"
-                style={{ backgroundColor: transitionData.targetTheme.colors.accent }}
+                style={{ backgroundColor: targetTheme.colors.accent }}
               />
               <span>SYSTEM CANON // PALETTE RECONFIG</span>
             </div>
@@ -134,7 +116,7 @@ export const ThemeFadeThrough: React.FC<ThemeFadeThroughProps> = ({
             </div>
             <div
               className="font-black"
-              style={{ color: transitionData.targetTheme.colors.accent }}
+              style={{ color: targetTheme.colors.accent }}
             >
               SWAPPING THEME
             </div>
@@ -144,14 +126,14 @@ export const ThemeFadeThrough: React.FC<ThemeFadeThroughProps> = ({
           <div className="relative z-10 max-w-2xl my-auto">
             {/* Origin to Destination Indicator */}
             <div className="flex items-center gap-2 text-[11px] sm:text-xs font-mono tracking-widest uppercase text-neutral-400 mb-3">
-              <span>{transitionData.originTheme.name}</span>
-              <span style={{ color: transitionData.targetTheme.colors.accent }}>→</span>
-              <span className="text-white font-bold">{transitionData.targetTheme.name}</span>
+              <span>{originTheme.name}</span>
+              <span style={{ color: targetTheme.colors.accent }}>→</span>
+              <span className="text-white font-bold">{targetTheme.name}</span>
             </div>
 
             {/* Big Grotesque Destination Title */}
             <h2 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-white uppercase leading-none font-sans">
-              {transitionData.targetTheme.name}
+              {targetTheme.name}
             </h2>
 
             {/* Architectural Theme Accent Metric Rule */}
@@ -160,12 +142,12 @@ export const ThemeFadeThrough: React.FC<ThemeFadeThroughProps> = ({
               animate={{ width: 110 }}
               transition={{ duration: 0.22, ease: 'easeOut' }}
               className="h-1.5 my-4"
-              style={{ backgroundColor: transitionData.targetTheme.colors.accent }}
+              style={{ backgroundColor: targetTheme.colors.accent }}
             />
 
             {/* Tagline / Style Readout */}
             <p className="text-xs sm:text-sm font-mono text-neutral-300 uppercase tracking-wider max-w-lg leading-relaxed">
-              {transitionData.targetTheme.tagline}
+              {targetTheme.tagline}
             </p>
           </div>
 

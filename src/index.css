@@ -163,6 +163,12 @@ body.theme-swiss *::after {
   transition: none !important;
 }
 
+/* Ensure the theme fade-through transition overlay maintains pure Swiss zero-radius geometry */
+#theme-fade-through-overlay,
+#theme-fade-through-overlay * {
+  border-radius: 0px !important;
+}
+
 /* ==========================================================================
    THEME 2: CYBER TERMINAL & CLI (Matrix Dark / Phosphor Green & Amber)
    ========================================================================== */

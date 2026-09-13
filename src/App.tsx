@@ -11,6 +11,7 @@ import { DesignStudioModal } from './components/DesignStudioModal';
 import { ThemeSwitcherBar } from './components/ThemeSwitcherBar';
 import { CustomCursor, CursorMode } from './components/CustomCursor';
 import { SystemLoader } from './components/SystemLoader';
+import { ThemeFadeThrough } from './components/ThemeFadeThrough';
 import { DesignTheme } from './data/designThemes';
 
 export default function App() {
@@ -27,6 +28,7 @@ export default function App() {
     }
     return 'swiss';
   });
+  const [pendingThemeId, setPendingThemeId] = useState<DesignTheme['id'] | null>(null);
   const [isDesignStudioOpen, setIsDesignStudioOpen] = useState(false);
 
   // Inverted Custom Cursor State
@@ -141,8 +143,19 @@ export default function App() {
     }
   };
 
+  // Safety watchdog: Ensure pending theme transitions always unlock and apply smoothly
+  useEffect(() => {
+    if (!pendingThemeId) return;
+    const watchdog = setTimeout(() => {
+      setActiveThemeId(pendingThemeId);
+      setPendingThemeId(null);
+    }, 550);
+    return () => clearTimeout(watchdog);
+  }, [pendingThemeId]);
+
   const handleSelectTheme = (themeId: DesignTheme['id']) => {
-    setActiveThemeId(themeId);
+    if (themeId === activeThemeId) return;
+    setPendingThemeId(themeId);
   };
 
   return (
@@ -151,6 +164,14 @@ export default function App() {
       {!isBootLoaded && (
         <SystemLoader onComplete={() => setIsBootLoaded(true)} />
       )}
+
+      {/* Swiss International Typographic Fade-Through Theme Transition Overlay */}
+      <ThemeFadeThrough
+        targetThemeId={pendingThemeId}
+        activeThemeId={activeThemeId}
+        onApplyTheme={(newThemeId) => setActiveThemeId(newThemeId)}
+        onComplete={() => setPendingThemeId(null)}
+      />
 
       {/* Structural Container */}
       <div className="w-full max-w-[1600px] mx-auto border-x-4 border-black min-h-screen flex flex-col bg-white">
